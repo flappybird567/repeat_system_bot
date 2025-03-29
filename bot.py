@@ -34,4 +34,4 @@ async def create(ctx):
             print(f"Fehler beim Erstellen: {e}")
     await ctx.send("20 Kanäle wurden erfolgreich erstellt!")
 
-bot.run("MTM0OTA3MTY5NjYzNTc2MDc2MA.Gkju_y.C2_HJlPKi-AdiFu7nYk42T91IsWKxvLGSDjadM")
+bot.run("MTM0OTA3MTY5NjYzNTc2MDc2MA.GjTvdK.wbg3k4IEuQsCWus_-MuYcnmzm83NOGbLPvj5KU")
